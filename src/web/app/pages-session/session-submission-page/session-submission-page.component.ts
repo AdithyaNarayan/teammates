@@ -46,6 +46,7 @@ import {
 import { SimpleModalType } from '../../components/simple-modal/simple-modal-type';
 import { ErrorMessageOutput } from '../../error-message-output';
 import { SavingCompleteModalComponent } from './saving-complete-modal/saving-complete-modal.component';
+import {LogService} from "../../../services/log.service";
 
 interface FeedbackQuestionsResponse {
   questions: FeedbackQuestion[];
@@ -123,6 +124,7 @@ export class SessionSubmissionPageComponent implements OnInit, AfterViewInit {
               private authService: AuthService,
               private navigationService: NavigationService,
               private commentService: FeedbackResponseCommentService,
+              private logService: LogService,
               @Inject(DOCUMENT) private document: any) {
     this.timezoneService.getTzVersion(); // import timezone service to load timezone data
   }
@@ -310,6 +312,15 @@ export class SessionSubmissionPageComponent implements OnInit, AfterViewInit {
           }
         }
 
+        this.logService.createFeedbackSessionLog({
+          courseId: this.courseId,
+          studentEmail: this.loggedInUser,
+          logType: "access",
+        }).subscribe(() => {
+          console.log('adi u did it');
+        }, () => {
+          this.simpleModalService.openInformationModal('Log Error', SimpleModalType.WARNING, '');
+        });
         this.loadFeedbackQuestions();
       }, (resp: ErrorMessageOutput) => {
         if (resp.status === 404) {
@@ -538,6 +549,16 @@ export class SessionSubmissionPageComponent implements OnInit, AfterViewInit {
     const answers: Record<string, FeedbackResponse[]> = {};
     const failToSaveQuestions: Record<number, string> = {}; // Map of question number to error message
     const savingRequests: Observable<any>[] = [];
+
+    this.logService.createFeedbackSessionLog({
+      courseId: this.courseId,
+      studentEmail: this.loggedInUser,
+      logType: "submission",
+    }).subscribe(() => {
+      console.log('adi u did it');
+    }, () => {
+      this.simpleModalService.openInformationModal('Log Error', SimpleModalType.WARNING, '');
+    });
 
     this.questionSubmissionForms.forEach((questionSubmissionFormModel: QuestionSubmissionFormModel) => {
       let isQuestionFullyAnswered: boolean = true;
