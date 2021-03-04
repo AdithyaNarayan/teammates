@@ -12,11 +12,13 @@ import { FeedbackResponseCommentService } from '../../../services/feedback-respo
 import { FeedbackResponsesService } from '../../../services/feedback-responses.service';
 import { FeedbackSessionsService } from '../../../services/feedback-sessions.service';
 import { InstructorService } from '../../../services/instructor.service';
+import { LogService } from '../../../services/log.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { SimpleModalService } from '../../../services/simple-modal.service';
 import { StatusMessageService } from '../../../services/status-message.service';
 import { StudentService } from '../../../services/student.service';
 import { TimezoneService } from '../../../services/timezone.service';
+import { LogTypes } from '../../../types/api-const';
 import {
   AuthInfo,
   FeedbackParticipantType,
@@ -46,7 +48,6 @@ import {
 import { SimpleModalType } from '../../components/simple-modal/simple-modal-type';
 import { ErrorMessageOutput } from '../../error-message-output';
 import { SavingCompleteModalComponent } from './saving-complete-modal/saving-complete-modal.component';
-import {LogService} from "../../../services/log.service";
 
 interface FeedbackQuestionsResponse {
   questions: FeedbackQuestion[];
@@ -315,9 +316,9 @@ export class SessionSubmissionPageComponent implements OnInit, AfterViewInit {
         this.logService.createFeedbackSessionLog({
           courseId: this.courseId,
           studentEmail: this.loggedInUser,
-          logType: "access",
+          logType: LogTypes.FEEDBACK_SESSION_ACCESS,
         }).subscribe(() => {
-          console.log('adi u did it');
+
         }, () => {
           this.simpleModalService.openInformationModal('Log Error', SimpleModalType.WARNING, '');
         });
@@ -553,9 +554,9 @@ export class SessionSubmissionPageComponent implements OnInit, AfterViewInit {
     this.logService.createFeedbackSessionLog({
       courseId: this.courseId,
       studentEmail: this.loggedInUser,
-      logType: "submission",
+      logType: LogTypes.FEEDBACK_SESSION_SUBMISSION,
     }).subscribe(() => {
-      console.log('adi u did it');
+
     }, () => {
       this.simpleModalService.openInformationModal('Log Error', SimpleModalType.WARNING, '');
     });

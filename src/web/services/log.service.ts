@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpRequestService } from "./http-request.service";
-import { ResourceEndpoints } from "../types/api-const";
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
+import { LogTypes, ResourceEndpoints } from '../types/api-const';
+import { HttpRequestService } from './http-request.service';
 
 /**
  * Handles logging related logic provision.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LogService {
 
@@ -19,11 +19,11 @@ export class LogService {
   createFeedbackSessionLog(queryParams: {
     courseId: string,
     studentEmail: string,
-    logType: string }): Observable<string> {
+    logType: LogTypes }): Observable<string> {
     const paramMap: Record<string, string> = {
       courseId: queryParams.courseId,
       studentEmail: queryParams.studentEmail,
-      fsltype: queryParams.logType,
+      fsltype: queryParams.logType.toString(),
     };
 
     return this.httpRequestService.get(ResourceEndpoints.TRACK_SESSION, paramMap);
